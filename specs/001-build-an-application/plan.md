@@ -1,8 +1,8 @@
 
-# Implementation Plan: [FEATURE]
+# Implementation Plan: Inspiration Source Blog Writer
 
-**Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
-**Input**: Feature specification from `/specs/[###-feature-name]/spec.md`
+**Branch**: `001-build-an-application` | **Date**: 2025-09-28 | **Spec**: `/specs/001-build-an-application/spec.md`
+**Input**: Feature specification from `/specs/001-build-an-application/spec.md`
 
 ## Execution Flow (/plan command scope)
 ```
@@ -34,44 +34,44 @@
 [Extract from feature spec: primary requirement + technical approach from research]
 
 ## Technical Context
-**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
-**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
-**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
-**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
-**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
-**Project Type**: [single/web/mobile - determines source structure]  
-**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
-**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
-**Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
+**Language/Version**: Go 1.22 (backend/eino agent), Rust 1.75 (Tauri desktop), React 18 (frontend)  
+**Primary Dependencies**: eino framework (Go), Tauri (Rust), React with shadcn/ui components  
+**Storage**: File-based storage (Markdown files, JSON metadata)  
+**Testing**: Go test (backend), cargo test (Tauri), Jest/Vitest (React frontend)  
+**Target Platform**: Windows, macOS, Linux (desktop application)  
+**Project Type**: Web (Tauri desktop app with React frontend + Go backend)  
+**Performance Goals**: <500ms AI response time, <100ms UI interactions, offline-capable core editing  
+**Constraints**: Must support offline Markdown editing, real-time preview, cross-platform compatibility  
+**Scale/Scope**: Single user desktop application, local file storage, cloud sync optional
 
 ## Constitution Check
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
 ### Core Principles Compliance
-- [ ] **Go-First Development**: Implementation uses Go language and eino framework
-- [ ] **Desktop-First UX**: Primary interface is native Go desktop application  
-- [ ] **Test-Driven Development**: TDD approach with failing tests before implementation
-- [ ] **Markdown-Centric Data**: User content stored as Markdown with citation metadata
-- [ ] **Inspiration Source Integrity**: Accurate attribution and privacy protection
+- [⚠] **Go-First Development**: Backend uses Go/eino (compliant), but desktop UI uses Rust/Tauri/React (deviation - see Complexity Tracking)
+- [✅] **Desktop-First UX**: Primary interface is native desktop application with responsive UI and real-time Markdown preview
+- [✅] **Test-Driven Development**: TDD approach with failing tests before implementation (all layers)
+- [✅] **Markdown-Centric Data**: User content stored as Markdown files with JSON metadata for citations
+- [✅] **Inspiration Source Integrity**: Accurate attribution tracking with export to multiple formats (Markdown, JSON, CSV)
 
 ### Desktop Application Requirements
-- [ ] Native platform conventions followed
-- [ ] Real-time Markdown preview supported
-- [ ] Citation management interface implemented
-- [ ] Search/filter capabilities included
-- [ ] Export functionality provided
+- [✅] Native platform conventions followed (Tauri provides native window management)
+- [✅] Real-time Markdown preview supported (React-based live preview)
+- [✅] Citation management interface implemented (link collection and organization)
+- [✅] Search/filter capabilities included (for managing inspiration sources)
+- [✅] Export functionality provided (Markdown, HTML, PDF via Tauri printing)
 
 ### Development Workflow
-- [ ] Code reviews mandatory
-- [ ] Static analysis passes
-- [ ] Integration tests pass on all platforms
-- [ ] Performance benchmarks established
-- [ ] Documentation updated with code
+- [✅] Code reviews mandatory (all PRs require review)
+- [✅] Static analysis passes (golangci-lint, clippy, ESLint)
+- [✅] Integration tests pass on all platforms (Windows, macOS, Linux)
+- [✅] Performance benchmarks established (AI response time, UI performance)
+- [✅] Documentation updated with code (inline docs, user guides)
 
 ### Governance Compliance
-- [ ] No complexity without justification
-- [ ] Simplicity principle maintained
-- [ ] All PRs verify constitution compliance
+- [⚠] Complexity justified (hybrid architecture needed for optimal desktop UX - see Complexity Tracking)
+- [✅] Simplicity principle maintained (minimal dependencies, clean architecture)
+- [✅] All PRs verify constitution compliance (automated checks + manual review)
 
 ## Project Structure
 
@@ -87,50 +87,38 @@ specs/[###-feature]/
 ```
 
 ### Source Code (repository root)
-<!--
-  ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
-  for this feature. Delete unused options and expand the chosen structure with
-  real paths (e.g., apps/admin, packages/something). The delivered plan must
-  not include Option labels.
--->
+
 ```
-# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
-src/
-├── models/
-├── services/
-├── cli/
-└── lib/
-
-tests/
-├── contract/
-├── integration/
-└── unit/
-
-# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
 backend/
 ├── src/
-│   ├── models/
-│   ├── services/
-│   └── api/
+│   ├── agent/           # eino agent implementation
+│   ├── models/          # Go data models
+│   ├── services/        # Business logic services
+│   └── api/            # HTTP API endpoints
 └── tests/
+    ├── contract/
+    ├── integration/
+    └── unit/
 
 frontend/
 ├── src/
-│   ├── components/
-│   ├── pages/
-│   └── services/
+│   ├── components/      # React components with shadcn/ui
+│   ├── pages/          # Main application pages
+│   ├── services/       # API service clients
+│   └── lib/            # Shared utilities
 └── tests/
+    ├── components/
+    ├── pages/
+    └── integration/
 
-# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
-api/
-└── [same as backend above]
-
-ios/ or android/
-└── [platform-specific structure: feature modules, UI flows, platform tests]
+src-tauri/              # Tauri Rust backend and configuration
+├── src/
+│   └── main.rs         # Tauri application entry point
+├── Cargo.toml
+└── tauri.conf.json
 ```
 
-**Structure Decision**: [Document the selected structure and reference the real
-directories captured above]
+**Structure Decision**: Web application structure selected due to hybrid architecture: Go backend for eino agent and business logic, React frontend with shadcn/ui components for user interface, and Tauri Rust layer for desktop application functionality. This provides optimal separation of concerns while maintaining cross-platform compatibility.
 
 ## Phase 0: Outline & Research
 1. **Extract unknowns from Technical Context** above:
@@ -218,8 +206,8 @@ directories captured above]
 
 | Violation | Why Needed | Simpler Alternative Rejected Because |
 |-----------|------------|-------------------------------------|
-| [e.g., 4th project] | [current need] | [why 3 projects insufficient] |
-| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient] |
+| Go-First Development deviation (Rust/Tauri/React frontend) | Optimal desktop UX requires rich interactive interface with real-time preview, which is better achieved with React ecosystem and Tauri's native integration. Go desktop GUI libraries are limited in capabilities and user experience. | Pure Go desktop application would provide inferior user experience, limited component ecosystem, and reduced developer productivity for complex UI requirements. |
+| Multi-language architecture (Go + Rust + JavaScript) | Each layer serves distinct purpose: Go for AI agent/backend logic, Rust for system-level desktop integration, JavaScript/React for rich interactive UI. | Single-language approach would compromise either backend performance (JavaScript) or UI capabilities (Go) or desktop integration (pure JavaScript). |
 
 
 ## Progress Tracking
